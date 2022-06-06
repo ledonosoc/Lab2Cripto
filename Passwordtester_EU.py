@@ -23,7 +23,7 @@ driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () =>
 email_site = "https://www.fakemail.net/"
 password_types = [u"ZDpLud4J.","A1₁ⁱₕ₉ₘ₊⁼⁽ₔ⁰","A1234🌝💓😢🙉","ZDpLud4J.ø=\($þ","ZDpLud4J","A1ﺹ ﻇ ﻨ ﻩ ﻲ"]
 
-    for password in password_types:
+for password in password_types:
     #CREADO DE CORREO ELECTRÓNICO TERMPORAL
     driver.get(email_site)
     sleep(5)
