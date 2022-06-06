@@ -29,6 +29,7 @@ emailInput = driver.find_element(By.CSS_SELECTOR,"span#email")
 email = emailInput.text
 datos = email.split('@')
 nombre = datos[0].replace('.','')
+site = "https://www.fr9.es/"
 password = "ZDpLud4J"
 passwordchange = "J4duLpDZ"
 

@@ -95,7 +95,7 @@ while True:
         sleep(3)
 
 driver.switch_to.window(driver.window_handles[0])
-sleep(45)
+input('Please enter when email is received')
 driver.refresh()
 sleep(3)
 WebDriverWait(driver,15).until(EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[2]/div[3]/div[2]/div[1]/div/table/tbody/tr[1]/td[1]'))) 
