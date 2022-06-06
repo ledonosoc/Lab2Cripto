@@ -1,2 +1,1 @@
-pip install pillow
-pip install pytesseract
+pip install selenium

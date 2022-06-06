@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -28,8 +29,8 @@ emailInput = driver.find_element(By.CSS_SELECTOR,"span#email")
 
 email = emailInput.text
 datos = email.split('@')
-site = "https://www.fr9.es/"
 nombre = datos[0].replace('.','')
+site = "https://www.fr9.es/"
 password = "ZDpLud4J"
 passwordchange = "J4duLpDZ"
 
@@ -56,46 +57,66 @@ close_button.click()
 sleep(2)
 input_create_account.click()  
 sleep(5)
+
+#RESTABLECER CONTRASEÑA SITIO EUROPEO
 driver.get(site)
 WebDriverWait(driver,15).until(EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[4]/div/div[1]/a'))) 
 close_session = driver.find_element(By.XPATH,'/html/body/div[4]/div/div[1]/a')
 close_session.click()
 sleep(5)
-
-#LOGIN SITIO EUROPEO
-WebDriverWait(driver,15).until(EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[5]/div/form[1]/div/div[2]/input[2]'))) 
-input_email_mask= driver.find_element(By.XPATH,'/html/body/div[5]/div/form[1]/div/div[2]/input[2]')
-input_contraseña_mask = driver.find_element(By.XPATH ,'/html/body/div[5]/div/form[1]/div/div[1]/input[1]') 
-input_email= driver.find_element(By.XPATH,'/html/body/div[5]/div/form[1]/div/div[2]/input[3]')
-input_contraseña = driver.find_element(By.XPATH ,'/html/body/div[5]/div/form[1]/div/div[1]/input[2]') 
-input_login = driver.find_element(By.XPATH,'/html/body/div[5]/div/form[1]/div/input[1]') 
-input_email_mask.click()
-sleep(5) 
+driver.get(site+'usuario/olvido-su-contrasena')
+WebDriverWait(driver,15).until(EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[5]/div/div[4]/div/form/div[1]/input'))) 
+input_email= driver.find_element(By.XPATH,'/html/body/div[5]/div/div[4]/div/form/div[1]/input')
+sleep(1)
 input_email.send_keys(email) 
-input_contraseña_mask.click()
 sleep(5) 
-input_contraseña.send_keys(password)  
-sleep(5)
-input_login.click()  
+# create action chain object
+input_forgot = driver.find_element(By.XPATH,'/html/body/div[5]/div/div[4]/div/form/input')
+# perform the operation
+ActionChains(driver).move_to_element(input_forgot).perform()
+captcha = input('Please enter captcha \n')
+codigo = driver.find_element_by_id("sign_code")
+#Enviamos el captcha obtenido
+codigo.send_keys(captcha)
+input_forgot.click()
 sleep(3)
+while True:
+    try:   
+        driver.find_element(By.CLASS_NAME,"Wrong")
+    except:
+        break
+    else:
+        captcha = input('Please enter captcha correctly\n')
+        codigo = driver.find_element(By.ID,"sign_code")
+        #Enviamos el captcha obtenido
+        input_forgot = driver.find_element(By.NAME,'contact_submit')
+        codigo.send_keys(captcha)
+        input_forgot.click()
+        sleep(3)
 
+driver.switch_to.window(driver.window_handles[0])
+sleep(45)
+driver.refresh()
+sleep(3)
+WebDriverWait(driver,15).until(EC.presence_of_all_elements_located((By.XPATH,'/html/body/div[2]/div[3]/div[2]/div[1]/div/table/tbody/tr[1]/td[1]'))) 
+open_mail = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div[2]/div[1]/div/table/tbody/tr[1]/td[1]')
+open_mail.click()
+sleep(3)
+iframe = driver.find_element(By.XPATH,'/html/body/div/div[3]/div/div[2]/div/div/iframe')
+driver.switch_to.frame(iframe)
+reset_link = driver.find_element(By.XPATH,'/html/body/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td/table[3]/tbody/tr/td/div/div/div[1]/span/span/a')
+sleep(2)
+reset_link = reset_link.get_attribute('href')
 
-#CAMBIO DE CONSTRASEÑA SITIO EUROPEO
-driver.get(site+"usuario/configuracion")
-sleep(5)
-input_old_password = driver.find_element(By.XPATH,'/html/body/div[4]/div/div[6]/form/div[1]/div/div[1]/input')
-input_new_password = driver.find_element(By.XPATH,'/html/body/div[4]/div/div[6]/form/div[1]/div/div[2]/input')
-reinput_new_password = driver.find_element(By.XPATH,'/html/body/div[4]/div/div[6]/form/div[1]/div/div[3]/input')
-input_change_password = driver.find_element(By.XPATH,'/html/body/div[4]/div/div[6]/form/div[1]/div/input')
+driver.switch_to.window(driver.window_handles[1]) 
+driver.get(reset_link)
+
+input_new_password = driver.find_element(By.XPATH,'/html/body/div[5]/div/div[4]/div/form/div[1]/input')
+reinput_new_password = driver.find_element(By.XPATH,'/html/body/div[5]/div/div[4]/div/form/div[2]/input')
+input_change_password = driver.find_element(By.XPATH,'/html/body/div[5]/div/div[4]/div/form/input')
 sleep(3) 
-input_old_password.send_keys(password) 
-sleep(2) 
 input_new_password.send_keys(passwordchange) 
 sleep(2) 
 reinput_new_password.send_keys(passwordchange)  
-sleep(2)
-try:
-    input_change_password.click()
-except:
-    input_change_password.click()
+input_change_password.click()
 sleep(3)
