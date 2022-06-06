@@ -1,1 +1,1 @@
-pip install selenium
+Para poder ejecutar los script de python de este repositorio es necesario tener las librerias de Selenium. 
